@@ -1,6 +1,8 @@
 export const messages = {
     es: {
         album: 'Mis pegatinas', closeAlbum: 'Seguir jugando',
+        printSticker: 'Imprimir pegatina', backToAlbum: 'Volver a mi colección',
+        viewSticker: (name, count) => `Ver ${name} en grande. ${count} en tu colección.`,
         albumProgress: (count, total) => `${count} de ${total} pegatinas descubiertas`,
         albumLocked: 'Por descubrir', albumDevice: 'Completa una actividad para ganar una pegatina. Tu colección se guarda en este navegador.',
         albumTemporary: 'El navegador no permite guardar tu colección. Las pegatinas de esta sesión pueden perderse al salir.',
@@ -34,6 +36,8 @@ export const messages = {
     },
     de: {
         album: 'Meine Sticker', closeAlbum: 'Weiterspielen',
+        printSticker: 'Sticker drucken', backToAlbum: 'Zurück zur Sammlung',
+        viewSticker: (name, count) => `${name} vergrößern. ${count} in deiner Sammlung.`,
         albumProgress: (count, total) => `${count} von ${total} Stickern entdeckt`,
         albumLocked: 'Noch zu entdecken', albumDevice: 'Beende eine Aufgabe und verdiene einen Sticker. Deine Sammlung wird in diesem Browser gespeichert.',
         albumTemporary: 'Dein Browser kann die Sammlung nicht speichern. Die Sticker dieser Sitzung können beim Verlassen verloren gehen.',

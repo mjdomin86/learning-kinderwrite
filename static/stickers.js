@@ -72,6 +72,53 @@ export function initStickerAlbum(collection, language, t) {
     dialog.append(heading, summary, grid, note, close);
     document.body.append(dialog);
 
+    const detail = document.createElement('dialog');
+    detail.className = 'sticker-detail';
+    detail.setAttribute('aria-labelledby', 'sticker-detail-title');
+    const detailTitle = document.createElement('h2');
+    detailTitle.id = 'sticker-detail-title';
+    const largePicture = document.createElement('span');
+    largePicture.className = 'sticker-large';
+    largePicture.setAttribute('aria-hidden', 'true');
+    const printButton = document.createElement('button');
+    printButton.className = 'primary-button';
+    printButton.textContent = t.printSticker;
+    const backButton = document.createElement('button');
+    backButton.className = 'text-button';
+    backButton.textContent = t.backToAlbum;
+    backButton.addEventListener('click', () => detail.close());
+    detail.append(detailTitle, largePicture, printButton, backButton);
+    document.body.append(detail);
+
+    const printSheet = document.createElement('div');
+    printSheet.id = 'sticker-print-sheet';
+    printSheet.setAttribute('aria-hidden', 'true');
+    const printArtwork = document.createElement('canvas');
+    printArtwork.width = printArtwork.height = 1200;
+    printSheet.append(printArtwork);
+    document.body.append(printSheet);
+    let selectedSticker = null;
+
+    function prepareStickerPrint() {
+        if (!detail.open || !selectedSticker) return;
+        const context = printArtwork.getContext('2d');
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, 1200, 1200);
+        context.font = '900px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillStyle = '#000';
+        context.fillText(selectedSticker.emoji, 600, 600);
+        document.body.classList.remove('printing-drawing');
+        document.body.classList.add('printing-sticker');
+    }
+    printButton.addEventListener('click', () => {
+        prepareStickerPrint();
+        window.print();
+    });
+    window.addEventListener('beforeprint', prepareStickerPrint);
+    window.addEventListener('afterprint', () => document.body.classList.remove('printing-sticker'));
+
     function render() {
         const { counts, persistent } = collection.read();
         summary.textContent = t.albumProgress(Object.keys(counts).length, stickers.length);
@@ -87,7 +134,22 @@ export function initStickerAlbum(collection, language, t) {
             picture.textContent = count ? sticker.emoji : '?';
             const label = document.createElement('span');
             label.textContent = count ? `${sticker[language]} · ${count}` : t.albumLocked;
-            item.append(picture, label);
+            if (count) {
+                const button = document.createElement('button');
+                button.className = 'sticker-open';
+                button.setAttribute('aria-label', t.viewSticker(sticker[language], count));
+                button.setAttribute('aria-haspopup', 'dialog');
+                button.append(picture, label);
+                button.addEventListener('click', () => {
+                    selectedSticker = sticker;
+                    detailTitle.textContent = sticker[language];
+                    largePicture.textContent = sticker.emoji;
+                    detail.showModal();
+                });
+                item.append(button);
+            } else {
+                item.append(picture, label);
+            }
             grid.append(item);
         }
     }

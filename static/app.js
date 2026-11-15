@@ -410,6 +410,7 @@ async function initTrace() {
         refresh();
     });
     function preparePrint() {
+        if (document.body.classList.contains('printing-sticker')) return;
         if (!free || !strokes.length) return;
         input.cancel();
         // Freeze a separate copy before print layout can resize the drawing board.

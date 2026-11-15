@@ -284,3 +284,19 @@ progress::-moz-progress-bar { background: var(--green); border-radius: 10px; }
   body.printing-drawing dialog::backdrop { display: none; }
   #print-artwork { display: block; margin: 0 auto; width: auto; height: auto; max-width: 100%; max-height: 245mm; break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+.album-sticker.earned { padding: 0; }
+.sticker-open { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; min-height: 96px; padding: 12px 5px; border: 0; border-radius: 16px; background: transparent; color: inherit; font: inherit; overflow-wrap: anywhere; }
+.sticker-open:hover { background: #ffe6a0; }
+.sticker-detail { width: min(460px, calc(100% - 24px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: 22px; background: var(--paper); color: var(--ink); text-align: center; }
+.sticker-detail::backdrop { background: #203a3299; }
+.sticker-large { display: block; margin: 18px auto; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; font-size: clamp(100px, 45vw, 240px); line-height: 1.3; }
+.sticker-detail > button { display: flex; margin: 12px auto 0; white-space: normal; }
+#sticker-print-sheet { display: none; }
+@media print {
+  body.printing-sticker { margin: 0; background: white; min-height: 0; }
+  body.printing-sticker > * { display: none !important; }
+  body.printing-sticker #sticker-print-sheet { display: block !important; }
+  body.printing-sticker dialog::backdrop { display: none; }
+  #sticker-print-sheet canvas { display: block; width: 100mm; height: auto; max-width: 100%; margin: 0 auto; break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
