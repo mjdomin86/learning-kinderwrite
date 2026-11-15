@@ -1,5 +1,10 @@
 export const messages = {
     es: {
+        album: 'Mis pegatinas', closeAlbum: 'Seguir jugando',
+        albumProgress: (count, total) => `${count} de ${total} pegatinas descubiertas`,
+        albumLocked: 'Por descubrir', albumDevice: 'Completa una actividad para ganar una pegatina. Tu colección se guarda en este navegador.',
+        albumTemporary: 'El navegador no permite guardar tu colección. Las pegatinas de esta sesión pueden perderse al salir.',
+        stickerSaved: '¡Pegatina añadida a tu colección!', printDrawing: 'Imprimir dibujo',
         tagline: 'Un poquito de práctica, un montón de imaginación.',
         heading: 'Pequeñas letras,', headingEnd: 'grandes aventuras.',
         intro: 'Elige una letra o inventa tu propia palabra. ¡Vamos a escribir!',
@@ -28,6 +33,11 @@ export const messages = {
         invalid: 'Esta palabra es demasiado larga o tiene símbolos. Elige otra en Inicio.',
     },
     de: {
+        album: 'Meine Sticker', closeAlbum: 'Weiterspielen',
+        albumProgress: (count, total) => `${count} von ${total} Stickern entdeckt`,
+        albumLocked: 'Noch zu entdecken', albumDevice: 'Beende eine Aufgabe und verdiene einen Sticker. Deine Sammlung wird in diesem Browser gespeichert.',
+        albumTemporary: 'Dein Browser kann die Sammlung nicht speichern. Die Sticker dieser Sitzung können beim Verlassen verloren gehen.',
+        stickerSaved: 'Dein Sticker ist jetzt in deiner Sammlung!', printDrawing: 'Bild drucken',
         tagline: 'Ein bisschen üben, ganz viel Fantasie.',
         heading: 'Kleine Buchstaben,', headingEnd: 'große Abenteuer.',
         intro: 'Wähle einen Buchstaben oder dein eigenes Wort. Los geht’s!',

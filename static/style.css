@@ -259,3 +259,28 @@ progress::-moz-progress-bar { background: var(--green); border-radius: 10px; }
   border-radius: 4px;
   cursor: pointer;
 }
+
+.album-entry { display: flex; justify-content: flex-end; margin-top: 18px; }
+.sticker-album { width: min(620px, calc(100% - 24px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 26px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 22px; }
+.sticker-album::backdrop { background: #203a3299; }
+.album-summary { margin-top: 10px; color: var(--green); }
+.sticker-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 20px 0; list-style: none; }
+.album-sticker { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 5px; background: #eeefe7; border: 1px dashed #b1bdb4; border-radius: 16px; font-size: 12px; text-align: center; overflow-wrap: anywhere; }
+.album-sticker.earned { background: #fff2ca; border: 1px solid #e3ca84; }
+.album-emoji { display: grid; place-items: center; height: 58px; font-size: 42px; color: var(--muted); }
+.sticker-album > .primary-button { margin-top: 20px; }
+.celebration > .secondary-button { margin-top: 14px; }
+#sticker-save-status { margin-top: 12px; font-size: 14px; }
+#print-sheet { display: none; }
+@media (max-width: 420px) {
+  .sticker-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .sticker-album { padding: 20px; }
+}
+@media print {
+  @page { margin: 12mm; }
+  body.printing-drawing { margin: 0; background: white; min-height: 0; }
+  body.printing-drawing > * { display: none !important; }
+  body.printing-drawing #print-sheet { display: block !important; text-align: center; }
+  body.printing-drawing dialog::backdrop { display: none; }
+  #print-artwork { display: block; margin: 0 auto; width: auto; height: auto; max-width: 100%; max-height: 245mm; break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

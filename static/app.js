@@ -1,10 +1,13 @@
 import { normalizeWord, measureCoverage, bindDrawingInput } from './tracing-core.js';
 import { messages, getLanguage, saveLanguage } from './translations.js';
+import { createStickerCollection, initStickerAlbum } from './stickers.js';
 
 const language = getLanguage();
 const t = messages[language];
 document.documentElement.lang = language;
 document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t[el.dataset.i18n]; });
+const collection = createStickerCollection(() => localStorage);
+initStickerAlbum(collection, language, t);
 const emojiMap = { 'T-Rex': '🦖', Triceratops: '🦕', Elephant: '🐘', Giraffe: '🦒', Cat: '🐱', Dog: '🐶', Frog: '🐸', Owl: '🦉', Bee: '🐝', Fish: '🐟' };
 const practiceURL = text => `/trace?${new URLSearchParams({ text, lang: language })}`;
 
@@ -150,6 +153,9 @@ async function initTrace() {
     clear.setAttribute('aria-label', t.clear);
     const ribbon = document.getElementById('letter-ribbon');
     const dialog = document.getElementById('celebration');
+    const printButtons = document.querySelectorAll('[data-print-drawing]');
+    let earnedReward = null;
+    let printing = false;
     const colours = ['#3273cf', '#d94d77', '#25846c', '#8851bd'];
     let colour = colours[0];
     let phase = free ? 'free' : 'trace';
@@ -168,6 +174,7 @@ async function initTrace() {
     const draftKey = () => `${phase}:${phase === 'trace' ? index : 0}`;
 
     document.getElementById('practice-tabs').hidden = free;
+    printButtons.forEach(button => { button.hidden = !free; });
     canvas.setAttribute('aria-label', t.board);
     document.getElementById('colour-picker').setAttribute('aria-label', t.colours);
     colours.forEach((value, i) => {
@@ -269,6 +276,7 @@ async function initTrace() {
     function updateScore() {
         undo.disabled = clear.disabled = strokes.length === 0;
         done.disabled = strokes.length === 0;
+        printButtons.forEach(button => { button.disabled = strokes.length === 0; });
         if (phase !== 'trace' || !targetPixels) return;
         scoreCtx.clearRect(0, 0, scoreInk.width, scoreInk.height);
         scoreCtx.drawImage(canvas, 0, 0, scoreInk.width, scoreInk.height);
@@ -344,12 +352,14 @@ async function initTrace() {
         end() { currentStroke = null; updateScore(); },
     });
     function resize() {
+        if (printing) return;
         const rect = board.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
+        const scale = Math.min(window.devicePixelRatio || 1, 2);
+        if (rect.width === width && rect.height === height && canvas.width === Math.round(rect.width * scale)) return;
         input.cancel();
         width = rect.width;
         height = rect.height;
-        const scale = Math.min(window.devicePixelRatio || 1, 2);
         for (const element of [canvas, guide]) {
             element.width = Math.round(width * scale);
             element.height = Math.round(height * scale);
@@ -381,7 +391,9 @@ async function initTrace() {
     done.addEventListener('click', () => {
         if (!strokes.length) return;
         document.getElementById('celebration-title').textContent = free ? t.freeCelebration : t.celebration;
-        document.getElementById('sticker').textContent = ['🦊', '🦁', '🦋', '🐼', '🦖', '🐳'][Math.floor(Math.random() * 6)];
+        if (!earnedReward) earnedReward = collection.earn();
+        document.getElementById('sticker').textContent = earnedReward.sticker.emoji;
+        document.getElementById('sticker-save-status').textContent = earnedReward.persistent ? t.stickerSaved : t.albumTemporary;
         dialog.showModal();
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches && typeof confetti === 'function') {
             confetti({ particleCount: 65, spread: 65, origin: { y: 0.65 }, disableForReducedMotion: true });
@@ -390,12 +402,37 @@ async function initTrace() {
     document.getElementById('btn-again').addEventListener('click', () => {
         dialog.close();
         drafts.clear();
+        earnedReward = null;
         completed.clear();
         strokes = [];
         index = 0;
         phase = free ? 'free' : 'trace';
         refresh();
     });
+    function preparePrint() {
+        if (!free || !strokes.length) return;
+        input.cancel();
+        // Freeze a separate copy before print layout can resize the drawing board.
+        const artwork = document.getElementById('print-artwork');
+        artwork.width = canvas.width;
+        artwork.height = canvas.height;
+        const printContext = artwork.getContext('2d');
+        printContext.fillStyle = '#fff';
+        printContext.fillRect(0, 0, artwork.width, artwork.height);
+        printContext.drawImage(canvas, 0, 0);
+        document.body.classList.add('printing-drawing');
+        printing = true;
+    }
+    window.addEventListener('beforeprint', preparePrint);
+    window.addEventListener('afterprint', () => {
+        printing = false;
+        document.body.classList.remove('printing-drawing');
+    });
+    printButtons.forEach(button => button.addEventListener('click', () => {
+        if (!free || !strokes.length) return;
+        preparePrint();
+        window.print();
+    }));
     await document.fonts.ready;
     resize();
     refresh();
