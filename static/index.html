@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#faf8f1">
+  <title>KidWrite · Letras y aventuras</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="home-body">
+  <header class="site-header">
+    <a href="/" class="brand" aria-label="KidWrite"><span class="brand-icon" aria-hidden="true">✎</span>KidWrite<span class="brand-dot">.</span></a>
+    <nav class="language-switch" aria-label="Idioma / Sprache"><button data-language="es" lang="es">Español</button><button data-language="de" lang="de">Deutsch</button></nav>
+  </header>
+  <main class="home-main">
+    <section class="welcome">
+      <div><p class="eyebrow" data-i18n="tagline"></p><h1><span data-i18n="heading"></span><br><span class="accent-text" data-i18n="headingEnd"></span></h1><p class="intro" data-i18n="intro"></p></div>
+      <div class="letter-friends" aria-hidden="true"><span class="friend friend-a">a<span>•‿•</span></span><span class="friend friend-b">b<span>•ᴗ•</span></span><span class="sparkle">✦</span></div>
+    </section>
+    <section class="word-studio" aria-labelledby="word-heading">
+      <div class="studio-intro"><span class="small-badge" aria-hidden="true">✎</span><h2 id="word-heading" data-i18n="ownWord"></h2><p data-i18n="wordHelp"></p></div>
+      <div class="studio-form">
+        <form id="word-form" novalidate>
+          <label for="word-input" data-i18n="wordLabel"></label>
+          <div class="word-input-row"><input id="word-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="word-hint word-error"><button class="primary-button" type="submit" data-i18n="go"></button></div>
+          <p id="word-hint" class="field-hint" data-i18n="wordHint"></p><p id="word-error" class="form-error" role="alert" data-i18n="wordError" hidden></p>
+        </form>
+        <div class="suggestions" id="suggestions"><span data-i18n="suggestions"></span></div>
+      </div>
+    </section>
+    <section class="library" aria-labelledby="library-heading">
+      <div class="section-heading"><h2 id="library-heading" data-i18n="choose"></h2><div id="case-controls" class="segmented small"><button data-case="upper" aria-pressed="true">ABC</button><button data-case="lower" aria-pressed="false">abc</button></div></div>
+      <div class="segmented library-tabs"><button data-category="letter" aria-pressed="true" data-i18n="letters"></button><button data-category="word" aria-pressed="false" data-i18n="words"></button></div>
+      <p id="loading" class="status-text" role="status" data-i18n="loading"></p><button id="retry" class="secondary-button" data-i18n="retry" hidden></button><p id="empty" class="status-text" data-i18n="empty" hidden></p>
+      <div id="grid" class="letter-grid"></div>
+    </section>
+    <a id="free-link" class="free-draw-card" href="/trace"><span class="free-art" aria-hidden="true">〰</span><div><h2 data-i18n="freeTitle"></h2><p data-i18n="freeHint"></p></div><span class="free-draw-link" data-i18n="free"></span><span aria-hidden="true">↗</span></a>
+  </main>
+  <footer class="site-footer"><span>KidWrite · <span aria-hidden="true">♡</span></span><a href="/admin" data-i18n="grownups"></a></footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

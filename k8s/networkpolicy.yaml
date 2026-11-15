@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kidwrite-app
+  namespace: finanzas
+spec:
+  podSelector:
+    matchLabels:
+      app: kidwrite
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudflared
+        - ipBlock:
+            cidr: 192.168.178.65/32
+      ports:
+        - protocol: TCP
+          port: 80

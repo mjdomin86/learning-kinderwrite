@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - KidWrite</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <header style="border-radius:0;">
+        <h1>KidWrite Admin Panel</h1>
+    </header>
+
+    <main id="admin-view" class="admin-container" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Manage Content</h2>
+            <button id="logout-btn" class="admin-btn" style="background:#ff6b6b">Logout</button>
+        </div>
+
+        <!-- Add Item Form -->
+        <form id="add-form" class="admin-form" style="border-bottom: 2px solid #eee; padding-bottom: 20px;">
+            <select id="item-type" required>
+                <option value="letter">Letter</option>
+                <option value="word">Word</option>
+            </select>
+            <input type="text" id="item-content" placeholder="Content (e.g., A, cat)" required>
+            <select id="item-animal" required>
+                <option value="T-Rex">T-Rex</option>
+                <option value="Triceratops">Triceratops</option>
+                <option value="Elephant">Elephant</option>
+                <option value="Giraffe">Giraffe</option>
+                <option value="Cat">Cat</option>
+                <option value="Dog">Dog</option>
+                <option value="Frog">Frog</option>
+                <option value="Owl">Owl</option>
+                <option value="Bee">Bee</option>
+                <option value="Fish">Fish</option>
+            </select>
+            <button type="submit" class="admin-btn">Add Item</button>
+        </form>
+
+        <ul id="admin-items" class="item-list"></ul>
+    </main>
+
+    <main id="login-view" class="admin-container">
+        <h2>Admin Login</h2>
+        <form id="login-form" class="admin-form" style="margin-top:20px;">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="admin-btn">Login</button>
+            <div id="login-error" style="color:red; display:none;">Invalid credentials</div>
+        </form>
+    </main>
+
+    <script src="/admin.js"></script>
+</body>
+
+</html>

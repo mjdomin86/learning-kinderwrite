@@ -1,0 +1,67 @@
+export const messages = {
+    es: {
+        tagline: 'Un poquito de práctica, un montón de imaginación.',
+        heading: 'Pequeñas letras,', headingEnd: 'grandes aventuras.',
+        intro: 'Elige una letra o inventa tu propia palabra. ¡Vamos a escribir!',
+        ownWord: 'Una palabra muy tuya', wordHelp: 'Escribe tu nombre, un animal o algo que te guste.',
+        wordLabel: 'Tu palabra', placeholder: 'Escribe aquí…', go: '¡A escribir!',
+        wordHint: 'Hasta 12 letras. También puedes usar ñ y tildes.',
+        wordError: 'Escribe una sola palabra de 1 a 12 letras, sin espacios ni números.',
+        suggestions: 'Prueba con', examples: ['mamá', 'niño', 'sol', 'luna'],
+        choose: '¿Qué escribimos hoy?', letters: 'Letras', words: 'Palabras guardadas',
+        uppercase: 'Mayúsculas', lowercase: 'Minúsculas', loading: 'Preparando las letras…',
+        loadError: 'No pudimos cargar las letras. Puedes escribir tu propia palabra arriba.', retry: 'Volver a cargar',
+        empty: 'Todavía no hay palabras guardadas. ¡Inventa una arriba!',
+        freeTitle: 'Un espacio para imaginar', freeHint: 'Rayas, espirales, dibujos… ¡todo vale!', free: 'Dibujo libre',
+        grownups: 'Para mayores', back: 'Volver', trace: '1. Repasa', copy: '2. Escribe',
+        traceHint: 'Pinta la letra siguiendo su forma.', copyHint: 'Mira la palabra e intenta escribirla aquí.',
+        freeDrawHint: '¡Dibuja lo que imagines!', letterOf: (n, total) => `Letra ${n} de ${total}`,
+        progress: 'Letra pintada', ready: '¡La letra está lista!', start: '¡Sigue la letra con tu dedo!',
+        keepGoing: '¡Sigue así! Busca las partes que faltan.', stayClose: 'Acércate a la letra. Puedes deshacer y probar otra vez.',
+        next: 'Siguiente letra →', copyNow: 'Ahora, sin ayuda →', done: '¡Ya terminé!',
+        undo: 'Deshacer', clear: 'Borrar', colours: 'Elige un color', colourNames: ['Azul', 'Rosa', 'Verde', 'Violeta'],
+        showGuide: 'Ver ayuda', hideGuide: 'Ocultar ayuda', copyNote: 'Aquí no hay nota: prueba a tu ritmo.',
+        traceNote: 'La barra muestra cuánto has pintado de la letra.',
+        celebration: '¡Mira lo que has escrito!', celebrationHint: 'Una pegatina por tu esfuerzo. ¡Buen trabajo!',
+        freeCelebration: '¡Qué imaginación!', again: 'Otra vez', another: 'Elegir otra palabra',
+        sticker: 'Tu pegatina', board: 'Pizarra para escribir con el dedo o un lápiz digital',
+        invalid: 'Esta palabra es demasiado larga o tiene símbolos. Elige otra en Inicio.',
+    },
+    de: {
+        tagline: 'Ein bisschen üben, ganz viel Fantasie.',
+        heading: 'Kleine Buchstaben,', headingEnd: 'große Abenteuer.',
+        intro: 'Wähle einen Buchstaben oder dein eigenes Wort. Los geht’s!',
+        ownWord: 'Dein ganz eigenes Wort', wordHelp: 'Schreib deinen Namen, ein Tier oder etwas, das du magst.',
+        wordLabel: 'Dein Wort', placeholder: 'Hier tippen…', go: 'Los geht’s!',
+        wordHint: 'Bis zu 12 Buchstaben. Auch ä, ö, ü und ß sind willkommen.',
+        wordError: 'Schreib ein Wort mit 1 bis 12 Buchstaben, ohne Leerzeichen oder Zahlen.',
+        suggestions: 'Versuch mal', examples: ['Mama', 'Bär', 'Fuß', 'Sonne'],
+        choose: 'Was schreiben wir heute?', letters: 'Buchstaben', words: 'Gespeicherte Wörter',
+        uppercase: 'Großbuchstaben', lowercase: 'Kleinbuchstaben', loading: 'Die Buchstaben kommen…',
+        loadError: 'Die Buchstaben konnten nicht geladen werden. Du kannst oben dein eigenes Wort eingeben.', retry: 'Erneut laden',
+        empty: 'Noch keine Wörter gespeichert. Denk dir oben eines aus!',
+        freeTitle: 'Platz für deine Fantasie', freeHint: 'Linien, Kringel, Bilder… alles ist möglich!', free: 'Freies Malen',
+        grownups: 'Für Erwachsene', back: 'Zurück', trace: '1. Nachspuren', copy: '2. Schreiben',
+        traceHint: 'Male den Buchstaben entlang seiner Form aus.', copyHint: 'Schau dir das Wort an und schreib es hier.',
+        freeDrawHint: 'Male, was du dir vorstellst!', letterOf: (n, total) => `Buchstabe ${n} von ${total}`,
+        progress: 'Ausgemalt', ready: 'Der Buchstabe ist fertig!', start: 'Folge dem Buchstaben mit deinem Finger!',
+        keepGoing: 'Weiter so! Finde die Stellen, die noch fehlen.', stayClose: 'Bleib nah am Buchstaben. Du kannst einen Schritt zurückgehen und es noch mal versuchen.',
+        next: 'Nächster Buchstabe →', copyNow: 'Jetzt selbst schreiben →', done: 'Ich bin fertig!',
+        undo: 'Zurück', clear: 'Löschen', colours: 'Wähle eine Farbe', colourNames: ['Blau', 'Rosa', 'Grün', 'Lila'],
+        showGuide: 'Vorlage zeigen', hideGuide: 'Vorlage ausblenden', copyNote: 'Hier gibt es keine Note. Lass dir Zeit.',
+        traceNote: 'Der Balken zeigt, wie viel vom Buchstaben ausgemalt ist.',
+        celebration: 'Schau, was du geschrieben hast!', celebrationHint: 'Ein Sticker für deine Mühe. Gut gemacht!',
+        freeCelebration: 'So viel Fantasie!', again: 'Noch mal', another: 'Ein anderes Wort wählen',
+        sticker: 'Dein Sticker', board: 'Schreibfläche für deinen Finger oder einen digitalen Stift',
+        invalid: 'Dieses Wort ist zu lang oder enthält Zeichen. Wähle auf der Startseite ein anderes.',
+    },
+};
+export function getLanguage() {
+    const query = new URLSearchParams(location.search).get('lang');
+    if (Object.hasOwn(messages, query)) return query;
+    try { return localStorage.getItem('kidwrite-language') === 'de' ? 'de' : 'es'; }
+    catch { return 'es'; }
+}
+export function saveLanguage(language) {
+    try { localStorage.setItem('kidwrite-language', language); } catch { /* Private browsing still works. */ }
+}

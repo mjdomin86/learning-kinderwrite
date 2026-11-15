@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kidwrite-config
+  namespace: finanzas
+data:
+  ADMIN_USER: "admin"

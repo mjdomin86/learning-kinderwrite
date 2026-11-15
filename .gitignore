@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+npm-debug.log*
+/k8s/bitwarden-secret.yaml

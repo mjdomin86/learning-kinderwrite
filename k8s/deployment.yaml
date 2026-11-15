@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kidwrite
+  namespace: finanzas
+  labels:
+    app: kidwrite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kidwrite
+  template:
+    metadata:
+      labels:
+        app: kidwrite
+    spec:
+      containers:
+      - name: kidwrite
+        image: localhost/kinderwrite:2026-11-15-1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        envFrom:
+        - configMapRef:
+            name: kidwrite-config
+        env:
+        - name: ADMIN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: kidwrite-secret
+              key: ADMIN_PASS
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: kidwrite-secret
+              key: COOKIE_SECRET
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: kidwrite-pvc
