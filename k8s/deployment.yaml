@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kidwrite
-        image: localhost/kinderwrite:2026-11-15-1
+        image: localhost/kinderwrite:2026-11-16-1
         imagePullPolicy: Never
         ports:
         - containerPort: 80
