@@ -268,7 +268,8 @@ progress::-moz-progress-bar { background: var(--green); border-radius: 10px; }
 .album-sticker { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 5px; background: #eeefe7; border: 1px dashed #b1bdb4; border-radius: 16px; font-size: 12px; text-align: center; overflow-wrap: anywhere; }
 .album-sticker.earned { background: #fff2ca; border: 1px solid #e3ca84; }
 .album-emoji { display: grid; place-items: center; height: 58px; font-size: 42px; color: var(--muted); }
-.sticker-album > .primary-button { margin-top: 20px; }
+.album-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.album-header .primary-button { min-height: 44px; padding: 8px 14px; font-size: 14px; }
 .celebration > .secondary-button { margin-top: 14px; }
 #sticker-save-status { margin-top: 12px; font-size: 14px; }
 #print-sheet { display: none; }

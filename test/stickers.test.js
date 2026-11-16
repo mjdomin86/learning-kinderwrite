@@ -6,6 +6,23 @@ function memoryStorage() {
     const data = new Map();
     return { getItem: key => data.get(key) || null, setItem: (key, value) => data.set(key, value) };
 }
+test('the expanded album has at least 50 distinct, translated stickers', () => {
+    assert.ok(stickers.length >= 50);
+    assert.equal(new Set(stickers.map(sticker => sticker.emoji)).size, stickers.length);
+    for (const sticker of stickers) assert.ok(sticker.es && sticker.de, sticker.id);
+});
+
+test('the expanded album preserves all original stickers and awards a new one', () => {
+    const storage = memoryStorage();
+    const originalIds = ['fox', 'lion', 'butterfly', 'panda', 'dinosaur', 'whale', 'owl', 'bee', 'turtle', 'octopus', 'rabbit', 'unicorn'];
+    const counts = Object.fromEntries(originalIds.map(id => [id, 2]));
+    storage.setItem(collectionKey, JSON.stringify(counts));
+    const collection = createStickerCollection(() => storage);
+    assert.deepEqual(collection.read().counts, counts);
+    const { sticker } = collection.earn();
+    assert.ok(!originalIds.includes(sticker.id));
+    assert.deepEqual(collection.read().counts, { ...counts, [sticker.id]: 1 });
+});
 test('collects every animal before duplicates, preserves counts after reloading', () => {
     const storage = memoryStorage();
     const collection = createStickerCollection(() => storage);

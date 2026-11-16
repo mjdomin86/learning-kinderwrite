@@ -11,6 +11,44 @@ export const stickers = [
     { id: 'octopus', emoji: '🐙', es: 'Pulpo', de: 'Oktopus' },
     { id: 'rabbit', emoji: '🐰', es: 'Conejo', de: 'Kaninchen' },
     { id: 'unicorn', emoji: '🦄', es: 'Unicornio', de: 'Einhorn' },
+    { id: 'dog', emoji: '🐶', es: 'Perro', de: 'Hund' },
+    { id: 'cat', emoji: '🐱', es: 'Gato', de: 'Katze' },
+    { id: 'mouse', emoji: '🐭', es: 'Ratón', de: 'Maus' },
+    { id: 'hamster', emoji: '🐹', es: 'Hámster', de: 'Hamster' },
+    { id: 'bear', emoji: '🐻', es: 'Oso', de: 'Bär' },
+    { id: 'koala', emoji: '🐨', es: 'Koala', de: 'Koala' },
+    { id: 'tiger', emoji: '🐯', es: 'Tigre', de: 'Tiger' },
+    { id: 'cow', emoji: '🐮', es: 'Vaca', de: 'Kuh' },
+    { id: 'pig', emoji: '🐷', es: 'Cerdo', de: 'Schwein' },
+    { id: 'frog', emoji: '🐸', es: 'Rana', de: 'Frosch' },
+    { id: 'monkey', emoji: '🐵', es: 'Mono', de: 'Affe' },
+    { id: 'chicken', emoji: '🐔', es: 'Gallina', de: 'Huhn' },
+    { id: 'penguin', emoji: '🐧', es: 'Pingüino', de: 'Pinguin' },
+    { id: 'duck', emoji: '🦆', es: 'Pato', de: 'Ente' },
+    { id: 'eagle', emoji: '🦅', es: 'Águila', de: 'Adler' },
+    { id: 'parrot', emoji: '🦜', es: 'Loro', de: 'Papagei' },
+    { id: 'flamingo', emoji: '🦩', es: 'Flamenco', de: 'Flamingo' },
+    { id: 'peacock', emoji: '🦚', es: 'Pavo real', de: 'Pfau' },
+    { id: 'swan', emoji: '🦢', es: 'Cisne', de: 'Schwan' },
+    { id: 'bat', emoji: '🦇', es: 'Murciélago', de: 'Fledermaus' },
+    { id: 'wolf', emoji: '🐺', es: 'Lobo', de: 'Wolf' },
+    { id: 'horse', emoji: '🐴', es: 'Caballo', de: 'Pferd' },
+    { id: 'zebra', emoji: '🦓', es: 'Cebra', de: 'Zebra' },
+    { id: 'giraffe', emoji: '🦒', es: 'Jirafa', de: 'Giraffe' },
+    { id: 'elephant', emoji: '🐘', es: 'Elefante', de: 'Elefant' },
+    { id: 'rhino', emoji: '🦏', es: 'Rinoceronte', de: 'Nashorn' },
+    { id: 'hippo', emoji: '🦛', es: 'Hipopótamo', de: 'Nilpferd' },
+    { id: 'kangaroo', emoji: '🦘', es: 'Canguro', de: 'Känguru' },
+    { id: 'sloth', emoji: '🦥', es: 'Perezoso', de: 'Faultier' },
+    { id: 'otter', emoji: '🦦', es: 'Nutria', de: 'Otter' },
+    { id: 'hedgehog', emoji: '🦔', es: 'Erizo', de: 'Igel' },
+    { id: 'squirrel', emoji: '🐿️', es: 'Ardilla', de: 'Eichhörnchen' },
+    { id: 'snail', emoji: '🐌', es: 'Caracol', de: 'Schnecke' },
+    { id: 'ladybug', emoji: '🐞', es: 'Mariquita', de: 'Marienkäfer' },
+    { id: 'dolphin', emoji: '🐬', es: 'Delfín', de: 'Delfin' },
+    { id: 'shark', emoji: '🦈', es: 'Tiburón', de: 'Hai' },
+    { id: 'crab', emoji: '🦀', es: 'Cangrejo', de: 'Krabbe' },
+    { id: 'tropical-fish', emoji: '🐠', es: 'Pez tropical', de: 'Tropenfisch' },
 ];
 export const collectionKey = 'kidwrite-stickers-v1';
 
@@ -69,7 +107,10 @@ export function initStickerAlbum(collection, language, t) {
     close.textContent = t.closeAlbum;
     close.autofocus = true;
     close.addEventListener('click', () => dialog.close());
-    dialog.append(heading, summary, grid, note, close);
+    const header = document.createElement('div');
+    header.className = 'album-header';
+    header.append(heading, close);
+    dialog.append(header, summary, grid, note);
     document.body.append(dialog);
 
     const detail = document.createElement('dialog');
