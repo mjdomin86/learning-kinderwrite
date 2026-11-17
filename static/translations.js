@@ -33,6 +33,9 @@ export const messages = {
         freeCelebration: '¡Qué imaginación!', again: 'Otra vez', another: 'Elegir otra palabra',
         sticker: 'Tu pegatina', board: 'Pizarra para escribir con el dedo o un lápiz digital',
         invalid: 'Esta palabra es demasiado larga o tiene símbolos. Elige otra en Inicio.',
+        listenLetter: 'Escuchar letra', listenWord: 'Escuchar palabra',
+        listenLetterAria: letter => `Escuchar la letra ${letter}`,
+        listenWordAria: word => `Escuchar la palabra ${word}`,
     },
     de: {
         album: 'Meine Sticker', closeAlbum: 'Weiterspielen',
@@ -68,6 +71,9 @@ export const messages = {
         freeCelebration: 'So viel Fantasie!', again: 'Noch mal', another: 'Ein anderes Wort wählen',
         sticker: 'Dein Sticker', board: 'Schreibfläche für deinen Finger oder einen digitalen Stift',
         invalid: 'Dieses Wort ist zu lang oder enthält Zeichen. Wähle auf der Startseite ein anderes.',
+        listenLetter: 'Buchstaben anhören', listenWord: 'Wort anhören',
+        listenLetterAria: letter => `Buchstaben ${letter} anhören`,
+        listenWordAria: word => `Wort ${word} anhören`,
     },
 };
 export function getLanguage() {

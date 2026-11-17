@@ -1,6 +1,7 @@
 import { normalizeWord, measureCoverage, bindDrawingInput } from './tracing-core.js';
 import { messages, getLanguage, saveLanguage } from './translations.js';
 import { createStickerCollection, initStickerAlbum } from './stickers.js';
+import { getPracticeSpeechText, createSpeaker } from './speech.js';
 
 const language = getLanguage();
 const t = messages[language];
@@ -149,8 +150,14 @@ async function initTrace() {
     const help = document.getElementById('btn-guide');
     const undo = document.getElementById('btn-undo');
     const clear = document.getElementById('btn-clear');
+    const listen = document.getElementById('btn-listen');
+    const listenLabel = document.getElementById('listen-label');
     undo.setAttribute('aria-label', t.undo);
     clear.setAttribute('aria-label', t.clear);
+    const speaker = createSpeaker({
+        language,
+        onStateChange: speaking => listen.classList.toggle('is-speaking', speaking),
+    });
     const ribbon = document.getElementById('letter-ribbon');
     const dialog = document.getElementById('celebration');
     const printButtons = document.querySelectorAll('[data-print-drawing]');
@@ -302,6 +309,7 @@ async function initTrace() {
     }
     function setPhase(newPhase, newIndex = index) {
         input.cancel();
+        speaker.stop();
         drafts.set(draftKey(), strokes);
         phase = newPhase;
         index = newIndex;
@@ -314,6 +322,14 @@ async function initTrace() {
         document.getElementById('board-hint').textContent = phase === 'trace' ? t.traceHint : phase === 'copy' ? t.copyHint : t.freeDrawHint;
         document.getElementById('step-label').textContent = phase === 'trace' ? t.letterOf(index + 1, letters.length) : phase === 'copy' ? text : '✦';
         document.getElementById('step-label').classList.toggle('word-model', phase === 'copy');
+        const showListen = !free && speaker.supported;
+        listen.hidden = !showListen;
+        if (showListen) {
+            const isSingleLetter = phase === 'trace' || letters.length === 1;
+            const targetValue = phase === 'trace' ? letters[index] : text;
+            listenLabel.textContent = isSingleLetter ? t.listenLetter : t.listenWord;
+            listen.setAttribute('aria-label', isSingleLetter ? t.listenLetterAria(targetValue) : t.listenWordAria(targetValue));
+        }
         document.getElementById('progress-panel').hidden = phase !== 'trace';
         ribbon.hidden = phase !== 'trace' || letters.length < 2;
         document.getElementById('practice-note').textContent = phase === 'trace' ? t.traceNote : phase === 'copy' ? t.copyNote : '';
@@ -388,8 +404,13 @@ async function initTrace() {
         help.setAttribute('aria-pressed', String(showGuide));
         paintGuides();
     });
+    listen.addEventListener('click', () => {
+        if (free) return;
+        speaker.speak(getPracticeSpeechText({ phase, letters, index, text, language }));
+    });
     done.addEventListener('click', () => {
         if (!strokes.length) return;
+        speaker.stop();
         document.getElementById('celebration-title').textContent = free ? t.freeCelebration : t.celebration;
         if (!earnedReward) earnedReward = collection.earn();
         document.getElementById('sticker').textContent = earnedReward.sticker.emoji;
@@ -401,6 +422,7 @@ async function initTrace() {
     });
     document.getElementById('btn-again').addEventListener('click', () => {
         dialog.close();
+        speaker.stop();
         drafts.clear();
         earnedReward = null;
         completed.clear();
@@ -434,6 +456,8 @@ async function initTrace() {
         preparePrint();
         window.print();
     }));
+    window.addEventListener('pagehide', () => speaker.stop());
+    document.addEventListener('visibilitychange', () => { if (document.hidden) speaker.stop(); });
     await document.fonts.ready;
     resize();
     refresh();

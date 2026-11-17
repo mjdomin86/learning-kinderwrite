@@ -9,6 +9,7 @@ It features a touch-friendly Spanish/German interface, built-in SQLite content m
 ## Features
 
 - **Kid Mode**: Spanish/German controls, uppercase/lowercase letters, colour choices, undo, and free drawing.
+- **Listen to letter spelling**: A speaker button on the tracing screen speaks each letter's name (and the full word in Copy mode) in the selected language using the browser's built-in speech synthesis.
 - **My word**: Type a word (1–12 letters), trace its letters one at a time, then copy the whole word on a blank board. Spanish accents, ñ, German umlauts, and ß are supported. No admin login is needed.
 - **Encouraging practice**: An optional guide helps with copying. Finishing an attempt earns an animal sticker and a short confetti celebration, respecting reduced-motion preferences.
 - **Sticker album**: Collect 50 animal stickers from finished activities. New animals are awarded before duplicates, and each attempt earns one sticker. Open the album from the home page or the reward dialog. Collections are saved in the current browser on this device; clearing browser data removes them. When storage is unavailable, the app shows a notice and keeps rewards for the current page session.
@@ -43,7 +44,7 @@ The activity is **choose/type → trace each letter → copy the word → celebr
 
 The percentage means *letter area painted*, not handwriting quality. Only overlap with the rendered letter counts. The next-letter button appears at 80% coverage when at least 55% of the ink is within the letter or its forgiving edge margin. Covering the whole board therefore does not unlock the next letter. Copying is deliberately ungraded: there is no handwriting recognition or stroke-order assessment. The optional guide and undo keep retrying easy.
 
-`npm test` checks coverage, off-letter scribbling, Unicode word validation, translation consistency, pointer ownership, cancellation, delayed accidental toolbar clicks, and coalesced samples. Browser checks should also cover:
+`npm test` checks coverage, off-letter scribbling, Unicode word validation, translation consistency, letter spelling speech helpers, pointer ownership, cancellation, delayed accidental toolbar clicks, and coalesced samples. Browser checks should also cover:
 
 - Type `niño` and `Bär`; finish all letters, copy the word, show/hide help, and restart after the sticker.
 - Draw with one finger, add another, lift the first, then move the remaining finger. No joining line or unwanted toolbar action should appear.
