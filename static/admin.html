@@ -15,12 +15,43 @@
 
     <main id="admin-view" class="admin-container" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2>Manage Content</h2>
+            <h2>Kid Profiles &amp; Stickers</h2>
             <button id="logout-btn" class="admin-btn" style="background:#ff6b6b">Logout</button>
         </div>
 
+        <section class="admin-section">
+            <p class="admin-help">Create a passwordless profile and open its private link on the child's iPad. Stickers sync directly to the server database.</p>
+            <form id="profile-form" class="admin-form admin-inline-form">
+                <input type="text" id="profile-name" placeholder="Child's name (e.g., Leo)" maxlength="40" required>
+                <button type="submit" class="admin-btn">Create Profile</button>
+            </form>
+            <ul id="admin-profiles" class="item-list"></ul>
+        </section>
+
+        <section id="sticker-editor" class="sticker-editor" hidden>
+            <div class="sticker-editor-header">
+                <h3 id="sticker-editor-title">Edit Stickers</h3>
+                <button type="button" id="sticker-editor-close" class="admin-btn admin-btn-secondary">Close</button>
+            </div>
+            <div class="sticker-json-import">
+                <label for="sticker-json-input">Paste exported JSON (optional, from <code>kidwrite-stickers-v1</code>):</label>
+                <textarea id="sticker-json-input" rows="2" placeholder='{"fox":2,"lion":1}'></textarea>
+                <div class="sticker-editor-actions">
+                    <button type="button" id="sticker-json-merge" class="admin-btn admin-btn-secondary">Apply JSON to Grid</button>
+                </div>
+            </div>
+            <div id="admin-sticker-grid" class="admin-sticker-grid"></div>
+            <div class="sticker-editor-footer">
+                <span id="sticker-editor-status" class="admin-help" role="status"></span>
+                <button type="button" id="sticker-save-btn" class="admin-btn">Save Stickers</button>
+            </div>
+        </section>
+
+        <hr class="admin-divider">
+
+        <h2>Manage Content</h2>
         <!-- Add Item Form -->
-        <form id="add-form" class="admin-form" style="border-bottom: 2px solid #eee; padding-bottom: 20px;">
+        <form id="add-form" class="admin-form" style="border-bottom: 2px solid #eee; padding-bottom: 20px; margin-top: 16px;">
             <select id="item-type" required>
                 <option value="letter">Letter</option>
                 <option value="word">Word</option>
@@ -54,7 +85,7 @@
         </form>
     </main>
 
-    <script src="/admin.js"></script>
+    <script type="module" src="/admin.js"></script>
 </body>
 
 </html>

@@ -52,31 +52,40 @@ export const stickers = [
 ];
 export const collectionKey = 'kidwrite-stickers-v1';
 
+export function sanitizeStickerCounts(raw) {
+    const valid = {};
+    if (!raw || typeof raw !== 'object') return valid;
+    for (const sticker of stickers) {
+        const count = raw[sticker.id];
+        if (Number.isSafeInteger(count) && count > 0) valid[sticker.id] = count;
+    }
+    return valid;
+}
+
+export function pickNextSticker(counts, random = Math.random) {
+    const missing = stickers.filter(sticker => !counts[sticker.id]);
+    const pool = missing.length ? missing : stickers;
+    return pool[Math.floor(random() * pool.length)];
+}
+
 export function createStickerCollection(getStorage) {
     let counts = {};
     let persistent = true;
     function read() {
-        if (!persistent) return { counts: { ...counts }, persistent };
+        if (!persistent) return { counts: { ...counts }, persistent, profileName: '' };
         try {
             const stored = JSON.parse(getStorage().getItem(collectionKey) || '{}');
-            const valid = {};
-            for (const sticker of stickers) {
-                const count = stored?.[sticker.id];
-                if (Number.isSafeInteger(count) && count > 0) valid[sticker.id] = count;
-            }
-            counts = valid;
+            counts = sanitizeStickerCounts(stored);
         } catch {
             persistent = false;
         }
-        return { counts: { ...counts }, persistent };
+        return { counts: { ...counts }, persistent, profileName: '' };
     }
     return {
         read,
         earn() {
             read();
-            const missing = stickers.filter(sticker => !counts[sticker.id]);
-            const pool = missing.length ? missing : stickers;
-            const sticker = pool[Math.floor(Math.random() * pool.length)];
+            const sticker = pickNextSticker(counts);
             counts[sticker.id] = Math.min((counts[sticker.id] || 0) + 1, Number.MAX_SAFE_INTEGER);
             try {
                 getStorage().setItem(collectionKey, JSON.stringify(counts));
@@ -85,6 +94,52 @@ export function createStickerCollection(getStorage) {
                 persistent = false;
             }
             return { sticker, persistent };
+        },
+    };
+}
+
+export function createRemoteStickerCollection({ initialCounts = {}, profileName = '', fetchImpl = fetch } = {}) {
+    let counts = sanitizeStickerCounts(initialCounts);
+    let persistent = true;
+    let name = profileName;
+    return {
+        read() {
+            return { counts: { ...counts }, persistent, profileName: name };
+        },
+        setState({ counts: nextCounts, profileName: nextName, persistent: nextPersistent } = {}) {
+            if (nextCounts !== undefined) counts = sanitizeStickerCounts(nextCounts);
+            if (nextName !== undefined) name = nextName;
+            if (nextPersistent !== undefined) persistent = nextPersistent;
+        },
+        async sync() {
+            try {
+                const response = await fetchImpl('/api/kid/stickers');
+                if (!response.ok) return false;
+                const data = await response.json();
+                if (!data?.active) return false;
+                counts = sanitizeStickerCounts(data.counts);
+                name = data.profile?.name || name;
+                persistent = true;
+                return true;
+            } catch {
+                return false;
+            }
+        },
+        async earn() {
+            try {
+                const response = await fetchImpl('/api/kid/stickers/earn', { method: 'POST' });
+                if (!response.ok) throw new Error('Could not save sticker');
+                const data = await response.json();
+                counts = sanitizeStickerCounts(data.counts);
+                persistent = true;
+                const sticker = stickers.find(item => item.id === data.sticker?.id) || data.sticker;
+                return { sticker, persistent: true };
+            } catch {
+                const sticker = pickNextSticker(counts);
+                counts[sticker.id] = Math.min((counts[sticker.id] || 0) + 1, Number.MAX_SAFE_INTEGER);
+                persistent = false;
+                return { sticker, persistent: false };
+            }
         },
     };
 }
@@ -161,9 +216,11 @@ export function initStickerAlbum(collection, language, t) {
     window.addEventListener('afterprint', () => document.body.classList.remove('printing-sticker'));
 
     function render() {
-        const { counts, persistent } = collection.read();
+        const { counts, persistent, profileName } = collection.read();
+        heading.textContent = profileName ? t.albumTitleFor(profileName) : t.album;
         summary.textContent = t.albumProgress(Object.keys(counts).length, stickers.length);
-        note.textContent = persistent ? t.albumDevice : t.albumTemporary;
+        if (!persistent) note.textContent = t.albumTemporary;
+        else note.textContent = profileName ? t.albumProfile(profileName) : t.albumDevice;
         grid.replaceChildren();
         for (const sticker of stickers) {
             const item = document.createElement('li');
@@ -195,9 +252,10 @@ export function initStickerAlbum(collection, language, t) {
         }
     }
     document.querySelectorAll('[data-open-album]').forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
             render();
             dialog.showModal();
+            if (typeof collection.sync === 'function' && await collection.sync() && dialog.open) render();
         });
     });
     window.addEventListener('storage', event => {

@@ -1,13 +1,72 @@
 import { normalizeWord, measureCoverage, bindDrawingInput } from './tracing-core.js';
 import { messages, getLanguage, saveLanguage } from './translations.js';
-import { createStickerCollection, initStickerAlbum } from './stickers.js';
+import { createStickerCollection, createRemoteStickerCollection, collectionKey, initStickerAlbum } from './stickers.js';
 import { getPracticeSpeechText, createSpeaker } from './speech.js';
 
 const language = getLanguage();
 const t = messages[language];
 document.documentElement.lang = language;
 document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t[el.dataset.i18n]; });
-const collection = createStickerCollection(() => localStorage);
+
+const localCollection = createStickerCollection(() => localStorage);
+let activeCollection = localCollection;
+
+async function initKidProfile() {
+    try {
+        const kidToken = new URLSearchParams(location.search).get('kid');
+        let response = await fetch('/api/kid/stickers');
+        let data = response.ok ? await response.json() : null;
+        if ((!data || !data.active) && kidToken) {
+            response = await fetch('/api/kid/activate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: kidToken }),
+            });
+            data = response.ok ? await response.json() : null;
+        }
+        if (!data?.active) return;
+
+        let counts = data.counts || {};
+        const localCounts = localCollection.read().counts;
+        if (Object.keys(localCounts).length > 0) {
+            const mergeResponse = await fetch('/api/kid/stickers/merge', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ counts: localCounts }),
+            });
+            if (mergeResponse.ok) {
+                const merged = await mergeResponse.json();
+                counts = merged.counts || counts;
+                try { localStorage.removeItem(collectionKey); } catch { /* Private browsing */ }
+            }
+        }
+        activeCollection = createRemoteStickerCollection({
+            initialCounts: counts,
+            profileName: data.profile?.name || '',
+        });
+        const profileName = data.profile?.name;
+        if (profileName) {
+            document.querySelectorAll('[data-open-album]').forEach(button => {
+                button.textContent = t.albumButtonFor(profileName);
+            });
+        }
+    } catch {
+        // Offline or unreachable server falls back to localCollection.
+    }
+}
+
+const profileReady = initKidProfile();
+const collection = {
+    read: () => activeCollection.read(),
+    async sync() {
+        await profileReady;
+        return typeof activeCollection.sync === 'function' ? activeCollection.sync() : false;
+    },
+    async earn() {
+        await profileReady;
+        return activeCollection.earn();
+    },
+};
 initStickerAlbum(collection, language, t);
 const emojiMap = { 'T-Rex': '🦖', Triceratops: '🦕', Elephant: '🐘', Giraffe: '🦒', Cat: '🐱', Dog: '🐶', Frog: '🐸', Owl: '🦉', Bee: '🐝', Fish: '🐟' };
 const practiceURL = text => `/trace?${new URLSearchParams({ text, lang: language })}`;
@@ -408,11 +467,19 @@ async function initTrace() {
         if (free) return;
         speaker.speak(getPracticeSpeechText({ phase, letters, index, text, language }));
     });
-    done.addEventListener('click', () => {
-        if (!strokes.length) return;
+    let earningPromise = null;
+    done.addEventListener('click', async () => {
+        if (!strokes.length || earningPromise) return;
         speaker.stop();
         document.getElementById('celebration-title').textContent = free ? t.freeCelebration : t.celebration;
-        if (!earnedReward) earnedReward = collection.earn();
+        if (!earnedReward) {
+            earningPromise = collection.earn();
+            try {
+                earnedReward = await earningPromise;
+            } finally {
+                earningPromise = null;
+            }
+        }
         document.getElementById('sticker').textContent = earnedReward.sticker.emoji;
         document.getElementById('sticker-save-status').textContent = earnedReward.persistent ? t.stickerSaved : t.albumTemporary;
         dialog.showModal();

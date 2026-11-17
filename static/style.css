@@ -310,3 +310,30 @@ progress::-moz-progress-bar { background: var(--green); border-radius: 10px; }
   body.printing-sticker dialog::backdrop { display: none; }
   #sticker-print-sheet canvas { display: block; width: 100mm; height: auto; max-width: 100%; margin: 0 auto; break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+.admin-help { color: var(--muted); font-size: 14px; }
+.admin-section { margin-bottom: 24px; }
+.admin-inline-form { flex-direction: row; flex-wrap: wrap; margin-top: 12px; }
+.admin-inline-form input { flex: 1 1 200px; }
+.admin-divider { border: 0; border-top: 2px solid #eee; margin: 28px 0; }
+.admin-btn-secondary { background-color: #667671; }
+.admin-btn-secondary:hover { background-color: #505e59; }
+.admin-btn-small { padding: 8px 12px; font-size: 14px; }
+.profile-card { padding: 12px; border: 1px solid #e5e8e2; border-radius: 10px; margin-bottom: 10px; background: #fcfcf9; }
+.profile-card-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.profile-actions { display: flex; gap: 8px; }
+.profile-link-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.profile-link-row input { flex: 1 1 220px; padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 6px; background: white; color: var(--ink); }
+.admin-open-link { padding: 8px 12px; border-radius: 8px; background: #edece4; text-decoration: none; font-size: 14px; }
+.sticker-editor { margin-top: 18px; padding: 16px; border: 1px solid #d5ddd3; border-radius: 12px; background: #f8faf6; }
+.sticker-editor-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.sticker-editor-header h3 { margin: 0; }
+.sticker-json-import { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.sticker-json-import textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: monospace; font-size: 13px; }
+.admin-sticker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; max-height: 360px; overflow-y: auto; padding: 4px; }
+.admin-sticker-cell { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid #e2e6de; border-radius: 8px; background: white; }
+.admin-sticker-label { font-size: 13px; }
+.admin-sticker-controls { display: flex; align-items: center; gap: 6px; }
+.admin-sticker-controls input { width: 58px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 6px; }
+.admin-step-btn { width: 30px; height: 30px; border: 1px solid #ccc; border-radius: 6px; background: #f2f4ef; font-weight: bold; }
+.sticker-editor-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; }

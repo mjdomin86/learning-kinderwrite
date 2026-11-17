@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createStickerCollection, collectionKey, stickers } from '../static/stickers.js';
+import { createStickerCollection, createRemoteStickerCollection, collectionKey, stickers } from '../static/stickers.js';
 
 function memoryStorage() {
     const data = new Map();
@@ -60,4 +60,29 @@ test('quota errors do not discard session rewards on the next read', () => {
     collection.earn();
     assert.equal(Object.keys(collection.read().counts).length, 2);
     assert.equal(collection.read().persistent, false);
+});
+test('remote sticker collection syncs, earns, and falls back if offline', async () => {
+    let online = true;
+    const remote = createRemoteStickerCollection({
+        initialCounts: { fox: 1 },
+        profileName: 'Leo',
+        fetchImpl: async (url) => {
+            if (!online) throw new Error('Offline');
+            if (url === '/api/kid/stickers/earn') {
+                return { ok: true, json: async () => ({ sticker: stickers[1], counts: { fox: 1, [stickers[1].id]: 1 } }) };
+            }
+            return { ok: true, json: async () => ({ active: true, profile: { name: 'Leo' }, counts: { fox: 2 } }) };
+        },
+    });
+    assert.deepEqual(remote.read(), { counts: { fox: 1 }, persistent: true, profileName: 'Leo' });
+    const earned = await remote.earn();
+    assert.equal(earned.persistent, true);
+    assert.equal(earned.sticker.id, stickers[1].id);
+    assert.equal(await remote.sync(), true);
+    assert.deepEqual(remote.read().counts, { fox: 2 });
+
+    online = false;
+    const offlineEarn = await remote.earn();
+    assert.equal(offlineEarn.persistent, false);
+    assert.equal(Object.values(remote.read().counts).reduce((sum, n) => sum + n, 0), 3);
 });
